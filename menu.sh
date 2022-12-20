@@ -50,30 +50,28 @@ case $REPLY in
 		read db_name
 		if [ -e $db_name ];
 		then
-			cd ~/Downloads/database/$db_name
-			#echo $PWD
-	select Choice in "Press 1 to Create Table"
+	    cd ~/Downloads/database/$db_name
+select Choice in "Press 1 to Create Table" "Press 2 to Drop Table" "Press 3 To Insert Data in Table"
          do
 case $REPLY in
         1)
-		echo "Enter number of table"
-		read table_no
-		for(( i = 0 ; i < $table_no ; i++))
-		do
-			echo "Enter name of table"
-			read table_name
-                        touch ~/Downloads/database/$db_name/$table_name
-                      echo "Enter columns number"
-		      read col_no
- for(( j = 0 ; j < $col_no ; j++))
-       do
-        echo "Enter Datatype : ";
-         read data;
-
-         echo "Enter column name"
-	 read col_name
-if [ -e $col_name ]
-then 
+	   echo "Enter number of table"
+	   read table_no
+	for(( i = 0 ; i < $table_no ; i++))
+	   do
+	     echo "Enter name of table"
+	       read table_name
+                touch ~/Downloads/database/$db_name/$table_name
+              echo "Enter columns number"
+		read col_no
+       for(( j = 0 ; j < $col_no ; j++))
+          do
+              echo "Enter Datatype : ";
+                 read data;
+               echo "Enter column name"
+	         read col_name
+             if [ -e $col_name ]
+         then 
      echo "Column name is already exist"
 
 elif [[ $col_name =~ [0-9] ]];
@@ -99,48 +97,50 @@ else
 		echo "Wrong choice"
 			fi
 		fi
-		
-			    
-#	 2)
- #       echo "Enter Datatype : ";
-  #       read $data;
-#	    echo "Enter column name"
- #            read col_name
-  #           if [ -e $col_name ]
-   #     then
-    #            echo "Column name is already exist"
-
-     #           elif [[ $col_name =~ [0-9] ]];
-      #  then                
-       # echo "Not allowed to use numbers in the begining"
-               
-        #        elif [[ $col_name = *[-@#$%'&'*=+]* ]];
-       # then
-       # echo "Syntax Error"
-        #  else
-         #      typeset -i $col_name
-          #     echo "Is it primary key?(y/n)"
-           #    read ans
-            #   if [ $ans = "y" ] ;
-             #           then
-#	echo $col_name >> $table_name
- #         echo $data >> $table_name
-
-  #            elif [ $ans = "n" ];
-   #                     then
-   #	echo $col_name >> $table_name
-    #      echo $data >> $table_name
-
-     #     else
-      #       echo "Wrong choice"
-       #         fi
-	#	fi
-	#	;;
-       
-
-done 
 		done
-       
+                done
+		;;
+			    
+   2)
+       echo "Enter name of the table you need to drop"
+         read table_name
+         rm -f $table_name
+	         ;;
+
+   3)          
+       echo "Enter table name you will insert in it"
+       read table_name
+      echo "Enter number of columns you will insert in it"
+       read col_no
+      for(( m = 0 ; m < $col_no ; m++ ))
+       do
+	       echo "Enter Column name"
+	       read col_name
+	       echo "Enter data "
+	       read col_data
+          if [ $col_name == "id" ];
+	  then 
+		  if [ -z $col_data ];
+		  then 
+	          echo "ID number can't be null"
+                       echo "Enter data "
+                        read col_data
+                 elif [[ -e $col_data ]];
+		 then 
+		echo "ID number must be unique"
+                       echo "Enter data "
+                        read col_data
+		else
+                   echo "ID is added successfully"
+
+      
+         fi
+                 
+ fi
+                    echo $col_data >> $table_name
+
+	  done
+              # echo $id >> $table_name
 esac
 done
 	fi
