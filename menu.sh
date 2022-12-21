@@ -59,6 +59,9 @@ case $REPLY in
 	   read table_no
 	for(( i = 0 ; i < $table_no ; i++))
 	   do
+cols=""
+dataTypes=""
+meta=""
 	     echo "Enter name of table"
 	       read table_name
                 touch ~/Downloads/database/$db_name/$table_name
@@ -66,10 +69,15 @@ case $REPLY in
 		read col_no
        for(( j = 0 ; j < $col_no ; j++))
           do
-              echo "Enter Datatype : ";
-                 read data;
+meta=""
+              echo "Enter Datatype : "
+                 read dataType
+meta=$meta:$dataType
+dataTypes=$dataTypes:$dataType
                echo "Enter column name"
 	         read col_name
+meta=$meta:$col_name
+cols=$cols:$col_name
              if [ -e $col_name ]
          then 
      echo "Column name is already exist"
@@ -88,15 +96,20 @@ else
      read ans
        if [ $ans = "y" ];
        then
-	  echo $data >> $table_name : $col_name >> $table_name
-			 
+		 
+echo $cols > $table_name
+	  echo $dataTypes >> $table_name 
        elif [ $ans = "n" ];
        then
-        echo $data >> $table_name : $col_name >> $table_name
+        
+echo $cols > $table_name
+echo $dataTypes >> $table_name 
 else
 		echo "Wrong choice"
 			fi
 		fi
+meta=$meta:$ans
+echo $meta >> $table_name.meta
 		done
                 done
 		;;
@@ -112,6 +125,7 @@ else
        read table_name
       echo "Enter number of columns you will insert in it"
        read col_no
+data=""
       for(( m = 0 ; m < $col_no ; m++ ))
        do
 	       echo "Enter Column name"
@@ -137,9 +151,10 @@ else
          fi
                  
  fi
-                    echo $col_data >> $table_name
+data=$data:$col_data
 
 	  done
+                    echo $data >> $table_name
               # echo $id >> $table_name
 esac
 done
