@@ -124,6 +124,13 @@
 			read col_name
 			echo "Enter data "
 			read col_data
+			 if [[ $col_data =  *[-@#$%'&'*=+]* ]];
+                then
+                                echo "Syntax Error"
+                          else
+				  echo "data has entered"
+			  fi
+
 			if [ $col_name == "id" ];
 		then 
 			if [ -z $col_data ];
