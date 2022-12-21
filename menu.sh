@@ -26,15 +26,6 @@
 		then
 				echo "Syntax Error"
 							exit
-				# elif [[ $d_name =  var=`echo ${var// /_}` ]];
-		# then
-			#      echo "Syntax Error"
-			#               exit
-		
-			# elif [ $d_name = " " ];
-		#then
-			#    echo "Error"
-			#    exit
 
 		else
 			mkdir $d_name
@@ -51,7 +42,7 @@
 			if [ -e $db_name ];
 			then
 			cd ~/Downloads/Bash_Project/$db_name
-	select Choice in "Press 1 to Create Table" "Press 2 to Drop Table" "Press 3 To Insert Data in Table" "Press 4 to Update Table" "Press 5 to delete from table"
+	select Choice in "Press 1 to Create Table" "Press 2 to Drop Table" "Press 3 To Insert Data in Table" "Press 4 to Update Table" "Press 5 to delete from table" "Press 6 to show select menu"
 
 			do
 	case $REPLY in
@@ -159,9 +150,9 @@
 
 
 				;;
-
-			4) echo "Enter then name of the table you need to update"
-				read table_name
+	4)
+	       	echo "Enter then name of the table you need to update"
+			read table_name
 				
 			echo "Enter the name of column"
 			read col_name
@@ -174,13 +165,7 @@
 
 			echo "Enter the old value"
 			read oldval
-	echo $colNum 
-			#  if [ -e $table_name ]
-			# then
-				#  if [ -e $col_name ]
-				# then
-	#awk 'BEGIN{FS=OFS =":"} {if (NR>2) {if('$colNum'==$'$oldval') $'$colNUm'='$vupdate'}}' $table_name > $table_name
-	#awk 'BEGIN{FS=OFS =":"} {if ( $'$colNum' == "'$oldval'" ) $'$col_data'="'$vupdate'";}' $table_name 
+	 
 	sed -i ''$colNum's/'$oldval'/'$vupdate'/g' $table_name 2>> /dev/null
 
 
@@ -188,7 +173,7 @@
 
 	#fi
 	#fi
-	;;
+                 	;;
 
 
        5)
@@ -225,7 +210,68 @@
                 fi
 
 
+	        	;;
+
+	6)
+		 select Choice in "Press 1 to select all" "Press 2 to select column" "Press 3 to select with condition"
+       do
+	       case $REPLY in 
+		       1) echo "Enter table name"
+			       read table_name
+
+			       cat $table_name
+			       ;;
+	              2)
+			      echo "Enter table name"
+			      read table_name
+			      echo "Enter column name"
+			      read col_name
+			   cid=$(awk 'BEGIN{FS=":"}{if( NR==1){for(i=1;i<=NF;i++){if($i=="'$col_name'")print i}}}' $table_name)
+
+			   cut -d: -f$cid  $table_name
+			   ;;
+
+	           3)
+			   echo "Enter table name "
+                read table_name
+
+                echo "Enter column name"
+                read col_name
+
+
+                cid=$(awk 'BEGIN{FS=":"}{if(NR==1){for(i=1;i<=NF;i++){if($i=="'$col_name'")print i}}}' $table_name)
+		echo $cid
+
+                if [[ $cid == " " ]]
+                then
+                        echo "Not Found"
+
+                else
+                        echo "Enter Value"
+                        read values
+
+			
+            result=$(awk 'BEGIN{FS=":"}{if($'$cid'=="'$values'")print NR}' $table_name)
+	    
+
+                        if [[ $result == " " ]]
+                        then
+                                echo "Value Not Found"
+
+                        else
+                                NRs=$(awk 'BEGIN{FS=":"}{if($'$cid'=="'$values'")print NR}' $table_name)
+                             
+                                
+                                sed -n ''$NR'p' $table_name 2>> /dev/null
+                        fi
+                fi
 		;;
+
+
+	       esac
+
+
+       done
 
 
 
