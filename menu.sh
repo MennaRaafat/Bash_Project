@@ -51,7 +51,8 @@
 			if [ -e $db_name ];
 			then
 			cd ~/Downloads/Bash_Project/$db_name
-	select Choice in "Press 1 to Create Table" "Press 2 to Drop Table" "Press 3 To Insert Data in Table" "Press 4 to Update Table"
+	select Choice in "Press 1 to Create Table" "Press 2 to Drop Table" "Press 3 To Insert Data in Table" "Press 4 to Update Table" "Press 5 to delete from table"
+
 			do
 	case $REPLY in
 			1)
@@ -187,7 +188,45 @@
 
 	#fi
 	#fi
-			
+	;;
+
+
+       5)
+                echo "Enter table name "
+                read table_name
+
+                echo "Enter column name"
+                read col_name
+
+                cid=$(awk 'BEGIN{FS=":"}{if( NR==1){for(i=1;i<=NF;i++){if($i=="'$col_name'")print i}}}' $table_name)
+
+                echo $cid
+                if [[ $cid == " " ]]
+                then
+                        echo "Not Found"
+
+                else
+                        echo "Enter Value"
+                        read value
+            res=$(awk 'BEGIN{FS=":"}{if($'$cid'=="'$value'")print NR}' $table_name)
+
+            echo $res
+
+                        if [[ $res == " " ]]
+                        then
+                                echo "Value Not Found"
+
+                        else
+                                NR=$(awk 'BEGIN{FS=":"}{if($'$cid'=="'$value'")print NR}' $table_name)
+                                echo $NR
+                                sed -i ''$NR'd' $table_name 2>>err
+                                echo "deleted"
+                        fi
+                fi
+
+
+		;;
+
 
 
 
@@ -198,6 +237,11 @@
 	done
 		fi
 			;;
+
+
+
+
+
 		4)
 			echo "Enter database that you need to drop"
 			read dr_db
