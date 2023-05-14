@@ -1,6 +1,5 @@
-#!/bin/bash -x
 shopt=extglob
-        export LC_COLLATE=C
+export LC_COLLATE=C
         select Choice in "Press 1 to Create Database" "Press 2 to list Database" "Press 3 to Connect to Database" "Press 4 to Drop Database" "Press 5 to Exit"
         do
 		        case $REPLY in
@@ -14,7 +13,7 @@ shopt=extglob
 
                 elif [[ $d_name =~ [0-9] ]];
                 then
-        echo "Not allowed to use numbers in the begining"
+        echo "Not allowed to use numbers"
 
 	                elif [[ $d_name =  *[-@#$%'&'*=+]* ]];
                 then
@@ -45,6 +44,10 @@ do
         1)
                 echo "Enter number of table"
                 read table_no
+		if ! [[ $table_no =~ [0-9] ]]; 
+		then 
+			echo "Not allowed to use string"
+		else
                 for(( i = 0 ; i < $table_no ; i++))
                 do
         cols=""
@@ -63,23 +66,29 @@ do
 
 		 elif [[ $table_name =~ [0-9] ]];
                 then
-        echo "Not allowed to use numbers in the begining"
+        echo "Not allowed to use numbers"
 else
 
         touch ~/Downloads/Bash_Project/$db_name/$table_name
                 echo "Enter columns number"
                         read col_no
+		if ! [[ $col_no =~  [0-9] ]];
+		then 
+    echo "You are not allowed to use string"
+    
+else
 
                 for(( j = 0 ; j < $col_no ; j++))
                         do
         meta=""
                 echo "Enter Datatype(int/string) : "
                           read Type
-#if [[ $colType != "int" ]] || [[ $colType != "string" ]];
+#if [[ $Type != "int" ]] || [[ $Type != "string" ]];
 #then 
-#echo "Datatype doesn't exist"
+#echo "Datatype doesn't exist Program stop"
+#exit;
 #fi
- #else        
+ #else       
       meta=$Type
 if [[ $dataTypes == "" ]];
 then
@@ -130,9 +139,12 @@ pKey=""
 
 
  echo $meta >> $table_name.meta
-                        done
+
+			done
 		fi      
+	fi
 		done
+	fi
                         ;;
 
    2)
@@ -220,18 +232,18 @@ if [[ $colType == "int" ]]; then
         break
     done
 
-#if [[ $colType == "string" ]];
-#then
- #       while ! [[ $col_data == ^[A-Za-z]* ]];
-  #      do
-   #                echo "Syntax Error"
+if [[ $colType == "string" ]];
+then
+      while  [[ $col_data =~ ^[0-9]*$ ]];
+        do
+                   echo "Syntax Error"
 
-    #    echo -e "$colName ($colType) = \c"
-     #           read col_data
-#continue;
-#done
-#fi
-#done
+        echo -e "$colName ($colType) = \c"
+                read col_data
+
+done
+fi
+
 
  	if [[ $m == $colsNum ]]; 
 then
@@ -310,7 +322,7 @@ then
 
    cid=$(awk 'BEGIN{FS=":"}{if( NR==1){for(i=1;i<=NF;i++){if($i=="'$col_name'")print i}}}' $table_name)
 
-                echo $cid
+               
                 if [[ $cid == "" ]]
                 then
                         echo "Not Found"
@@ -320,15 +332,15 @@ then
                         read value
             res=$(awk 'BEGIN{FS=":"}{if($'$cid'=="'$value'")print NR}' $table_name)
 
-            echo $res
+           
 
                         if [[ $res == "" ]]
                         then
                                 echo "Value Not Found"
 
                         else
-                                NR=$(awk 'BEGIN{FS=":"}{if($'$cid'=="'$value'")print NR}' $table_name)
-                                echo $NR
+    NR=$(awk 'BEGIN{FS=":"}{if($'$cid'=="'$value'")print NR}' $table_name)
+                               
                                 sed -i ''$NR'd' $table_name 2>>err
                                 echo "deleted"
                         fi
@@ -386,8 +398,8 @@ then
                 read col_name
 
 
-                cid=$(awk 'BEGIN{FS=":"}{if(NR==1){for(i=1;i<=NF;i++){if($i=="'$col_name'")print i}}}' $table_name)
-                echo $cid
+                cid=$(awk 'BEGIN{FS=":"}{if(NR==2){for(i=1;i<=NF;i++){if($i=="'$col_name'")print i}}}' $table_name)
+               
 
                 if [[ $cid == "" ]];
                 then
